@@ -38,7 +38,7 @@ You can learn how to use shadow drive through the cli [here](https://github.com/
 ### Creating the NFT on-chain
 
 To do the on-chain part of the gb ROM NFT creation you need to create a wallet.
-First install (Solana cli tools)[https://docs.solana.com/cli/install-solana-cli-tools].
+First install [Solana cli tools](https://docs.solana.com/cli/install-solana-cli-tools).
 
 Now you can run the commands below.
 
