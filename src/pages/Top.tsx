@@ -59,9 +59,9 @@ export const Top = () => {
         >
           My Retro-style Games
         </h1>
-        <div className={styles.grid}>
           {games.length > 0 &&
-            games.map((game, index) => {
+              <div className={styles.grid}>
+                  {games.map((game, index) => {
               return (
                 <div key={index} className={styles.gridItem}>
                   {" "}
@@ -76,8 +76,10 @@ export const Top = () => {
                   />
                 </div>
               );
-            })}
-        </div>
+                })}
+
+              </div>
+              }
         {games.length === 0 && (
           <>
             <p
