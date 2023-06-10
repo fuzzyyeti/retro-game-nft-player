@@ -12,6 +12,8 @@ declare global {
     go: () => Promise<void>;
   }
 }
+const creatorAddresses = process.env.NEXT_PUBLIC_CREATOR_ADDRESSES!.split(",");
+
 export const Top = () => {
   const [rom, setRom] = useState<string | null>(null);
   const [romKey, setRomKey] = useState(0);
@@ -25,7 +27,7 @@ export const Top = () => {
     if (nfts.length === 0) return;
     const games = await getImageAndRom(
       nfts.filter(
-        (nft) => nft.creator === process.env.NEXT_PUBLIC_CREATOR_ADDRESS!
+        (nft) => creatorAddresses.includes(nft.creator)
       )
     );
     setGames(games);

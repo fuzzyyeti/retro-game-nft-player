@@ -4,7 +4,7 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
+import {SolflareWalletAdapter, UnsafeBurnerWalletAdapter} from "@solana/wallet-adapter-wallets";
 import {
   WalletModalProvider,
   WalletDisconnectButton,
@@ -25,6 +25,7 @@ export const Wallet: FC = () => {
 
   const wallets = useMemo(
     () => [
+        new SolflareWalletAdapter(),
       /**
        * Wallets that implement either of these standards will be available automatically.
        *
