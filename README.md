@@ -17,8 +17,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Screenshots
 
-![Screenshot 1](./images/screen1.png)
-![Screenshot 2](./images/screen2.png)
+![Screenshot 1](./images/screen3.png)
+![Screenshot 2](./images/screen4.png)
 
 ## Creating gb ROM NFTs
 
