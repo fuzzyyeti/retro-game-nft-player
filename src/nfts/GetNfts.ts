@@ -1,48 +1,51 @@
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
-import { NodeInfo } from "detect-browser";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
-export interface NftInfo {
-  creator: string;
-  uri: string;
+export type GameInfo = {
+    name: string;
+    rom: string;
+    image: string;
 }
 
 export const useGetNfts = () => {
   const { wallet, connected } = useWallet();
-  const { connection } = useConnection();
   const nftsRetrieved = useRef(false);
-  const [nfts, setNfts] = useState<Array<NftInfo>>([]);
-
+  const [nfts, setNfts] = useState<Array<GameInfo>>([]);
   useEffect(() => {
-    if (!connected) return;
-    getNfts();
-  }, [connected]);
-  const getNfts = async (): Promise<void> => {
-    if (!wallet?.adapter?.publicKey || !connection || nftsRetrieved.current)
-      return;
-    console.log("Getting nfts again");
-    nftsRetrieved.current = true;
-    const nftAccounts = await getParsedNftAccountsByOwner({
-      publicAddress: wallet.adapter.publicKey.toBase58(),
-      connection,
-    });
-    const nftInfos = nftAccounts
-      .map((nftAccount) => {
+    if(connected && wallet) {
+      getNfts(wallet.adapter.publicKey!.toBase58());
+    }
+  }, [connected, wallet])
+
+  const getNfts = async (address: string): Promise<void> => {
+    const requestBody = {
+      jsonrpc: '2.0',
+      id: 'my-id',
+      method: 'getAssetsByOwner',
+      params: {
+        // @ts-ignore
+        ownerAddress: address,
+        page: 1,
+        limit: 1000
+      }
+    };
+    const {data} = await axios.post(process.env.NEXT_PUBLIC_DATA_ASSET_API!, requestBody);
+    const assets = data.result.items;
+    const nftInfos = assets.map((nftAccount: any) => {
+        const games = nftAccount.content.files.filter((f: any) => f.mime?.includes('x-gb-rom'));
         if (
-          !nftAccount.data?.creators ||
-          !nftAccount.data.creators[0] ||
-          !nftAccount.data.uri
+            games.length === 0
         ) {
           return null;
         }
         return {
-          creator: nftAccount.data.creators[0].address as string,
-          uri: nftAccount.data.uri,
+          name: nftAccount.name,
+          rom: games[0].uri,
+          image: nftAccount.content.files.filter((f: any) => f.mime?.includes('image'))[0].uri
         };
       })
-      .filter((nftInfo) => nftInfo !== null) as Array<NftInfo>;
-    console.log("setting nfts");
+      .filter((nftInfo: any) => nftInfo !== null) as Array<GameInfo>;
     setNfts(nftInfos);
   };
   return { nfts };

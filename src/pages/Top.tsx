@@ -1,8 +1,6 @@
 import styles from "@/styles/Top.module.css";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { NftInfo, useGetNfts } from "@/nfts/GetNfts";
-import { GameInfo, getImageAndRom } from "@/nfts/GetImageAndRom";
+import {  useState } from "react";
+import { useGetNfts } from "@/nfts/GetNfts";
 import GameCard from "@/components/GameCard";
 import Emulator from "@/components/Emulator";
 
@@ -13,31 +11,13 @@ declare global {
   }
 }
 const creatorAddresses = process.env.NEXT_PUBLIC_CREATOR_ADDRESSES!.split(",");
+console.log("creatorAddresses", creatorAddresses);
 
 export const Top = () => {
   const [rom, setRom] = useState<string | null>(null);
   const [romKey, setRomKey] = useState(0);
-  const { wallet } = useWallet();
-  const { nfts } = useGetNfts();
-  const [games, setGames] = useState<GameInfo[]>([]);
+  const { nfts: games} = useGetNfts();
   const [showDialog, setShowDialog] = useState(false);
-
-  const populateGames = useCallback(async () => {
-    console.log("nfts", nfts);
-    if (nfts.length === 0) return;
-    const games = await getImageAndRom(
-      nfts.filter(
-        (nft) => creatorAddresses.includes(nft.creator)
-      )
-    );
-    setGames(games);
-  }, [nfts, setGames]);
-  useEffect(() => {
-    console.log("wallet", wallet?.adapter.publicKey?.toBase58());
-    if (wallet && wallet.adapter.publicKey) {
-      populateGames();
-    }
-  }, [wallet?.adapter.publicKey, populateGames]);
 
   return (
     <>
