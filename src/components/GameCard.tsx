@@ -1,6 +1,6 @@
-import { GameInfo } from "@/nfts/GetImageAndRom";
 import frame from "../assets/frame.png";
 import ExpandSVG from "../assets/expand.svg";
+import {GameInfo} from "@/nfts/GetNfts";
 
 const GameCard = ({
   game,
